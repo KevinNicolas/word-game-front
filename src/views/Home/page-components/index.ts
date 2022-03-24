@@ -1,2 +1,2 @@
 export * from './keyboard/Keyboard'
-// export * from './letter-screen/Letters-screen'
+export * from './letter-screen/Letters-screen'
