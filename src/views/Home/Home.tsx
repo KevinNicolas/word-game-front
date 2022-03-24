@@ -5,6 +5,8 @@ import { useBackend, useKeyListener } from "@hooks"
 import { parseWord } from "@utils"
 import { HomeStyles } from "./home-styles"
 import { LetterData } from "@types"
+import { KeyboardLetterStatusProps } from './home-definitions'
+import { Keyboard } from "./page-components"
 
 const keyboardLetters: string[][] = [
   ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'],
@@ -12,7 +14,7 @@ const keyboardLetters: string[][] = [
   ['z', 'x', 'c', 'v', 'b', 'n', 'm']
 ]
 
-interface KeyboardLetterStatusProps { unexist: string[], correct: string[] }
+
 
 export const Home = () => {
   const handleEnterEvent = () => {
@@ -90,23 +92,8 @@ export const Home = () => {
                   />)
             }
           </div>
-          <div className="letters-container full">
-            {
-              keyboardLetters.map((row: string[], index: number) => (
-                <div key={index} className="row-container">
-                  {
-                    row.map((letter: string, letterIndex: number) => (
-                      <KeyboardKey
-                        key={letterIndex}
-                        letter={letter}
-                        pressed={keyboardLettersStatus.unexist.includes(letter)}
-                        good={keyboardLettersStatus.correct.includes(letter)}
-                      />
-                    ))
-                  }
-                </div>
-              ))
-            }
+          <div className="full">
+            <Keyboard keyboardLettersStatus={keyboardLettersStatus} />
           </div>
         </div>
       </div>

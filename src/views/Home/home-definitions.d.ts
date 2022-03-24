@@ -1,0 +1,1 @@
+export interface KeyboardLetterStatusProps { unexist: string[], correct: string[] }
