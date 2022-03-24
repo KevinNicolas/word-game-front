@@ -1,24 +1,23 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-// import App from './App'
+import App from './App'
 
-// import { useTheme } from './hooks/useTheme'
-// import { GlobalStyle, DarkTheme, LightTheme } from './assets/styles'
+import { useTheme } from './hooks/useTheme'
+import { GlobalStyle, DarkTheme, LightTheme } from './assets/styles'
 
 const Main = () => {
-  // const [theme, toggleTheme] = useTheme()
-  // document.addEventListener('toggle-theme', toggleTheme)
+  const [theme, toggleTheme] = useTheme()
+  document.addEventListener('toggle-theme', toggleTheme)
   return (
-    <span>Home</span>
-    // <>
-    //   <GlobalStyle />
-    //   {
-    //     theme === 'dark'
-    //       ? <DarkTheme />
-    //       : <LightTheme />
-    //   }
-    //   <App />
-    // </>
+    <>
+      <GlobalStyle />
+      {
+        theme === 'dark'
+          ? <DarkTheme />
+          : <LightTheme />
+      }
+      <App />
+    </>
   )
 }
 

@@ -1,0 +1,1 @@
+export * from './parse-word/parse-word'
