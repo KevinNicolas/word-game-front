@@ -12,17 +12,35 @@ const keyboardLetters: string[][] = [
   ['z', 'x', 'c', 'v', 'b', 'n', 'm']
 ]
 
+interface KeyboardLetterStatusProps { unexist: string[], correct: string[] }
+
 export const Home = () => {
   const handleEnterEvent = () => {
-    const parsedWords: LetterData[] = parseWord({ wordToGuess: word, enteredWord: typedWord.value })
-    setunexistedLetters([...new Set([...unexistedLetters, ...parsedWords.map(({ letter, status }) => status === 'unexist' ? letter : '')])])
+    const { lettersData: parsedWords, wordIsComplete: isComplete } = parseWord({ wordToGuess: word, enteredWord: typedWord.value })
+    const correct: string[] = []
+    const unexist: string[] = []
+    for (const { letter, status } of parsedWords) {
+      switch (status) {
+        case 'correct': correct.push(letter); break;
+        case 'unexist': unexist.push(letter); break;
+      }
+    }
+    setkeyboardLettersStatus({
+      correct: [...new Set([...keyboardLettersStatus.correct, ...parsedWords.map(({ letter, status }) => status === 'correct' ? letter : '')])],
+      unexist: [...new Set([...keyboardLettersStatus.unexist, ...parsedWords.map(({ letter, status }) => status === 'unexist' ? letter : '')])]
+    })
     setdisplayLetters(parsedWords)
+    if (isComplete !== wordIsComplete) setwordIsComplete(isComplete)
   }
 
   const [word, setword] = useState<string>('')
   const [typedWord, settypedWord] = useKeyListener(handleEnterEvent)
   const [displayLetters, setdisplayLetters] = useState<LetterData[]>([])
-  const [unexistedLetters, setunexistedLetters] = useState<string[]>([])
+  const [wordIsComplete, setwordIsComplete] = useState<boolean>(false)
+  const [keyboardLettersStatus, setkeyboardLettersStatus] = useState<KeyboardLetterStatusProps>({
+    correct: [],
+    unexist: []
+  })
 
   
   const getWord = () => {
@@ -53,7 +71,7 @@ export const Home = () => {
   useEffect(() => { processDisplayLetters() }, [typedWord, word])
 
   return (
-    <HomeStyles>
+    <HomeStyles wordIsComplete={wordIsComplete}>
       <div className="page-container">
         <div className="header-container full">
           <h1>Word-Game</h1>
@@ -63,7 +81,13 @@ export const Home = () => {
             {
               word === ''
                 ? <WaterfallLoading />
-                : displayLetters.map(({ letter, status }: LetterData, index: number) => <WordLetterCard key={index} letter={letter} status={status} />)
+                : displayLetters.map(({ letter, status }: LetterData, index: number) => 
+                  <WordLetterCard
+                    key={index}
+                    letter={letter}
+                    status={status}
+                    wordIsComplete={wordIsComplete}
+                  />)
             }
           </div>
           <div className="letters-container full">
@@ -72,13 +96,17 @@ export const Home = () => {
                 <div key={index} className="row-container">
                   {
                     row.map((letter: string, letterIndex: number) => (
-                      <KeyboardKey letter={letter} key={letterIndex} pressed={unexistedLetters.includes(letter)} />
+                      <KeyboardKey
+                        key={letterIndex}
+                        letter={letter}
+                        pressed={keyboardLettersStatus.unexist.includes(letter)}
+                        good={keyboardLettersStatus.correct.includes(letter)}
+                      />
                     ))
                   }
                 </div>
               ))
             }
-            <span>{ displayLetters.map(({ status }) => `${status}-`) }</span>
           </div>
         </div>
       </div>

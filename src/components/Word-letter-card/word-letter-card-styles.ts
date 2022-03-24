@@ -1,6 +1,11 @@
 import styled from "styled-components";
 import { LetterStatus } from "@types"
 
+interface StyleProps {
+  wordIsComplete: boolean
+  status: LetterStatus
+}
+
 const statusToColors: Record<LetterStatus, string> = {
   normal: '#ffa500',
   correct: 'linear-gradient(145deg, #1fb143, #1a9539)',
@@ -8,7 +13,7 @@ const statusToColors: Record<LetterStatus, string> = {
   unexist: 'linear-gradient(145deg, #b6b6b6, #999999)'
 }
 
-export const WordLetterCardStyles = styled.div<{ status: LetterStatus }>`
+export const WordLetterCardStyles = styled.div<StyleProps>`
   .word-letter-card-container {
     border-radius: 10px;
     min-width: 6rem;
@@ -16,8 +21,8 @@ export const WordLetterCardStyles = styled.div<{ status: LetterStatus }>`
     border-radius: 10px;
     background: ${({ status }) => statusToColors[status]};
     box-shadow:  
-        10px 10px 28px #e09100,
-        -10px -10px 28px #ffb900;
+        10px 10px 28px ${({ wordIsComplete }) => wordIsComplete ? '#1a9639' : '#e09100'},
+        -10px -10px 28px ${({ wordIsComplete }) => wordIsComplete ? '#1a9639' : '#ffb900'};
     transition: all 300ms linear;
 
     span {

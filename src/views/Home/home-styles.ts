@@ -1,6 +1,10 @@
 import styled from "styled-components";
 
-export const HomeStyles = styled.div`
+interface StyleProps {
+  wordIsComplete: boolean
+}
+
+export const HomeStyles = styled.div<StyleProps>`
   .page-container {
     --header-height: 5rem;
     
@@ -21,10 +25,11 @@ export const HomeStyles = styled.div`
     grid-template-rows: 50% 50%;
 
     .word-container {
-      background: #ffa500;
+      background: ${({ wordIsComplete }) => wordIsComplete ? '#1fb143' : '#ffa500'};
+      transition: background 300ms ease-in-out;
       box-shadow: 
-        inset 17px 17px 34px #db8e00,
-        inset -17px -17px 34px #ffbc00;
+        inset 17px 17px 34px ${({ wordIsComplete }) => wordIsComplete ? '#1a9639' : '#db8e00'},
+        inset -17px -17px 34px ${({ wordIsComplete }) => wordIsComplete ? '#24cc4d' : '#ffbc00'};
       flex-flow: row;
       gap: 1rem;
     }
