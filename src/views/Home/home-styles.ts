@@ -20,17 +20,26 @@ export const HomeStyles = styled.div`
     display: grid;
     grid-template-rows: 50% 50%;
 
-    .letters-container {
-      display: flex;
-      flex-flow: column;
-      justify-content: center;
-      align-items: center;
-      gap: .5rem;
+    .panel-container {
+      --actions-container-height: 3rem;
 
-      .row-container {
+      display: grid;
+      grid-template-rows: var(--actions-container-height) calc(100% - var(--actions-container-height));
+
+      .actions-container {
+        padding: .5rem 2rem;
         display: flex;
-        flex-flow: row;
-        gap: .5rem;
+        flex-flow: row-reverse;
+        align-items: center;
+      }
+
+      .get-word-btn {
+        background: var(--primary);
+        color: var(--contrast-color);
+        padding: .5rem 1.5rem;
+        border-radius: 5px;
+        font-weight: 600;
+        cursor: pointer;
       }
     }
   }

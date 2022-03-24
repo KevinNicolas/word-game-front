@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { MutableRefObject, useEffect, useImperativeHandle, useState } from "react"
 
 import { WaterfallLoading, WordLetterCard } from "@components"
 import { useBackend, useKeyListener } from "@hooks"
@@ -6,12 +6,19 @@ import { LetterData } from "@types"
 import { parseWord } from "@utils"
 
 import { LetterScreenStyles } from "./letters-screen-styles"
+import { LetterScreenRefFunction } from "views/Home/home-definitions"
 
 interface Props {
   updateKeyboardLetterStatus: ({ correct, unexist }: { correct: string[], unexist: string[] }) => void
+  reference: MutableRefObject<LetterScreenRefFunction | undefined>
 }
 
-export const LetterScreen = ({ updateKeyboardLetterStatus }: Props) => {
+export const LetterScreen = ({ reference, updateKeyboardLetterStatus }: Props) => {
+
+  useImperativeHandle(reference, (): LetterScreenRefFunction => ({
+    refreshWord: () => getWord()
+  }))
+
   const handleEnterEvent = () => {
     const { lettersData: parsedWords, wordIsComplete: isComplete } = parseWord({ wordToGuess: word, enteredWord: typedWord.value })
     const correct: string[] = []
@@ -25,10 +32,16 @@ export const LetterScreen = ({ updateKeyboardLetterStatus }: Props) => {
 
     updateKeyboardLetterStatus({ correct, unexist })
     setdisplayLetters(parsedWords)
-    if (isComplete !== wordIsComplete) setwordIsComplete(isComplete)
+    setwordStatus({ isComplete, alreadyAnalyzed: true })
   }
 
-  const processDisplayLetters = () => {
+  const processDisplayLetters = ({ reset = false }: { reset?: boolean }) => {
+    if (reset) {
+      setwordStatus({ isComplete: false, alreadyAnalyzed: false })
+      settypedWord({ value: '', lenght: word.length })
+      updateKeyboardLetterStatus({ correct: [], unexist: [] })
+    }
+    
     if (typedWord.value.length <= word.length) {
       let letters = typedWord.value
       for (let i = 0; i < (word.length - typedWord.value.length); i++) letters += ' '
@@ -41,6 +54,15 @@ export const LetterScreen = ({ updateKeyboardLetterStatus }: Props) => {
     }
   }
 
+  const clearTypedWord = () => { 
+    console.info()
+    if (wordStatus.alreadyAnalyzed) {
+      setwordStatus({ ...wordStatus, alreadyAnalyzed: false })
+      return settypedWord({ ...typedWord, value: '' })
+    }
+    settypedWord(({ value }) => ({ ...typedWord, value: value.substring(0, value.length - 1)}))
+  }
+
   const getWord = () => {
     setword('')
     useBackend.get$<{ word: string }>({ endpoint: '/word' }).subscribe({
@@ -51,17 +73,18 @@ export const LetterScreen = ({ updateKeyboardLetterStatus }: Props) => {
 
   const [word, setword] = useState<string>('')
   const [displayLetters, setdisplayLetters] = useState<LetterData[]>([])
-  const [wordIsComplete, setwordIsComplete] = useState<boolean>(false)
-  const [typedWord, settypedWord] = useKeyListener(handleEnterEvent)
+  const [wordStatus, setwordStatus] = useState<{ isComplete: boolean, alreadyAnalyzed: boolean }>({ isComplete: false, alreadyAnalyzed: false })
+  const [typedWord, settypedWord] = useKeyListener(handleEnterEvent, clearTypedWord)
 
   useEffect(() => {
     getWord()
   }, [])
 
-  useEffect(() => { processDisplayLetters() }, [typedWord, word])
+  useEffect(() => { processDisplayLetters({ reset: false }) }, [typedWord])
+  useEffect(() => { processDisplayLetters({ reset: true }) }, [word])
 
   return (
-    <LetterScreenStyles wordIsComplete={wordIsComplete}>
+    <LetterScreenStyles wordIsComplete={wordStatus.isComplete}>
       <div className="word-container full center">
         {
           word === ''
@@ -71,7 +94,7 @@ export const LetterScreen = ({ updateKeyboardLetterStatus }: Props) => {
                 key={index}
                 letter={letter}
                 status={status}
-                wordIsComplete={wordIsComplete}
+                wordIsComplete={wordStatus.isComplete}
               />)
         }
       </div>

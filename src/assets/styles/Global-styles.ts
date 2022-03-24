@@ -7,6 +7,7 @@ export const GlobalStyle = createGlobalStyle`
     padding: 0;
     text-decoration: none;
     border: none;
+    outline: none;
   }
   
   body {

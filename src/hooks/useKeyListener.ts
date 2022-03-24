@@ -7,7 +7,7 @@ interface TypedWord {
   value: string
 }
 
-export const useKeyListener = (pressEnter: () => void): [TypedWord, Dispatch<SetStateAction<TypedWord>>, Observable<String>] => {
+export const useKeyListener = (pressEnter: () => void, clearWord: () => void): [TypedWord, Dispatch<SetStateAction<TypedWord>>, Observable<String>] => {
   const [typedWord, settypedWord] = useState<TypedWord>({ value: '', lenght: 0 })
   
   const keyDown$ = fromEvent<KeyboardEvent>(document, 'keydown').pipe<string>(pluck('key'))
@@ -24,7 +24,10 @@ export const useKeyListener = (pressEnter: () => void): [TypedWord, Dispatch<Set
       if (isValidLetter) { return settypedWord(({ value }: TypedWord) => ({ ...typedWord, value: `${value}${keyPressed}` })) }
       
       switch(keyPressed.toLowerCase()) {
-        case 'backspace': return settypedWord(({ value }: TypedWord) => ({ ...typedWord, value: value.substring(0, value.length - 1)}))
+        case 'backspace': {
+          if (typedWord.lenght === typedWord.value.length) return clearWord()
+          return settypedWord(({ value }: TypedWord) => ({ ...typedWord, value: value.substring(0, value.length - 1)}))
+        }
         case 'enter': if (typedWord.lenght === typedWord.value.length) pressEnter(); break
       }
     })

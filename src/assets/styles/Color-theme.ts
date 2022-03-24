@@ -2,7 +2,7 @@ import { createGlobalStyle } from "styled-components";
 
 export const DarkTheme = createGlobalStyle`
   :root {
-    --primary: #fff;
+    --primary: #F10086;
     --primary-light: #fff;
     --primary-dark: #fff;
 

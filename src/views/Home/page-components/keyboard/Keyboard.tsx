@@ -1,6 +1,7 @@
 import { KeyboardKey } from "@components"
 
 import { KeyboardLetterStatusProps } from '../../home-definitions'
+import { KeyboardStyles } from "./keyboard-styles"
 
 
 const keyboardLetters: string[][] = [
@@ -15,23 +16,25 @@ interface Props {
 
 export const Keyboard = ({ keyboardLettersStatus }: Props) => {
   return (
-    <div className="letters-container full">
-      {
-        keyboardLetters.map((row: string[], index: number) => (
-          <div key={index} className="row-container">
-            {
-              row.map((letter: string, letterIndex: number) => (
-                <KeyboardKey
-                  key={letterIndex}
-                  letter={letter}
-                  pressed={keyboardLettersStatus.unexist.includes(letter)}
-                  good={keyboardLettersStatus.correct.includes(letter)}
-                />
-              ))
-            }
-          </div>
-        ))
-      }
-    </div>
+    <KeyboardStyles>
+      <div className="letters-container full">
+        {
+          keyboardLetters.map((row: string[], index: number) => (
+            <div key={index} className="row-container">
+              {
+                row.map((letter: string, letterIndex: number) => (
+                  <KeyboardKey
+                    key={letterIndex}
+                    letter={letter}
+                    pressed={keyboardLettersStatus.unexist.includes(letter)}
+                    good={keyboardLettersStatus.correct.includes(letter)}
+                  />
+                ))
+              }
+            </div>
+          ))
+        }
+      </div>
+    </KeyboardStyles>
   )
 }
