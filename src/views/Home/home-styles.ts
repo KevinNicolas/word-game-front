@@ -24,12 +24,14 @@ export const HomeStyles = styled.div`
       --actions-container-height: 3rem;
 
       display: grid;
-      grid-template-rows: var(--actions-container-height) calc(100% - var(--actions-container-height));
+      grid-template-rows: repeat(2, var(--actions-container-height)) calc(100% - calc(var(--actions-container-height) * 2));
 
       .actions-container {
         padding: .5rem 2rem;
         display: flex;
-        flex-flow: row-reverse;
+        flex-flow: row;
+        align-items: center;
+        justify-content: space-between;
         align-items: center;
       }
 
@@ -40,6 +42,13 @@ export const HomeStyles = styled.div`
         border-radius: 5px;
         font-weight: 600;
         cursor: pointer;
+      }
+
+      .correct-letter {
+        display: flex;
+        flex-flow: row;
+        align-items: flex-end;
+        justify-content: center;
       }
     }
   }

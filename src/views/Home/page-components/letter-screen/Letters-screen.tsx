@@ -9,17 +9,19 @@ import { LetterScreenStyles } from "./letters-screen-styles"
 import { LetterScreenRefFunction } from "views/Home/home-definitions"
 
 interface Props {
-  updateKeyboardLetterStatus: ({ correct, unexist }: { correct: string[], unexist: string[] }) => void
+  updateKeyboardLetterStatus: ({ correct, unexist }: { correct: string[], unexist: string[] }, reset?: boolean) => void
+  setcorrectLetters: (letters: LetterData[]) => void
   reference: MutableRefObject<LetterScreenRefFunction | undefined>
 }
 
-export const LetterScreen = ({ reference, updateKeyboardLetterStatus }: Props) => {
+export const LetterScreen = ({ reference, updateKeyboardLetterStatus, setcorrectLetters }: Props) => {
 
   useImperativeHandle(reference, (): LetterScreenRefFunction => ({
     refreshWord: () => getWord()
   }))
 
   const handleEnterEvent = () => {
+    if (wordStatus.alreadyAnalyzed) return
     const { lettersData: parsedWords, wordIsComplete: isComplete } = parseWord({ wordToGuess: word, enteredWord: typedWord.value })
     const correct: string[] = []
     const unexist: string[] = []
@@ -33,13 +35,15 @@ export const LetterScreen = ({ reference, updateKeyboardLetterStatus }: Props) =
     updateKeyboardLetterStatus({ correct, unexist })
     setdisplayLetters(parsedWords)
     setwordStatus({ isComplete, alreadyAnalyzed: true })
+    setcorrectLetters(parsedWords)
   }
 
   const processDisplayLetters = ({ reset = false }: { reset?: boolean }) => {
     if (reset) {
       setwordStatus({ isComplete: false, alreadyAnalyzed: false })
       settypedWord({ value: '', lenght: word.length })
-      updateKeyboardLetterStatus({ correct: [], unexist: [] })
+      updateKeyboardLetterStatus({ correct: [], unexist: [] }, true)
+      setcorrectLetters(word.split('').map(({}, index: number) => ({ letter: '_', index, status: 'normal' })))
     }
     
     if (typedWord.value.length <= word.length) {
@@ -55,7 +59,7 @@ export const LetterScreen = ({ reference, updateKeyboardLetterStatus }: Props) =
   }
 
   const clearTypedWord = () => { 
-    console.info()
+    if (wordStatus.isComplete) return getWord()
     if (wordStatus.alreadyAnalyzed) {
       setwordStatus({ ...wordStatus, alreadyAnalyzed: false })
       return settypedWord({ ...typedWord, value: '' })

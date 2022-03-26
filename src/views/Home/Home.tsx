@@ -3,6 +3,8 @@ import { useRef, useState } from "react"
 import { HomeStyles } from "./home-styles"
 import { KeyboardLetterStatusProps, LetterScreenRefFunction } from './home-definitions'
 import { Keyboard, LetterScreen } from "./page-components"
+import { CorrectWords } from "components/Correct-words/Correct-words"
+import { LetterData } from "@types"
 
 
 
@@ -11,9 +13,25 @@ export const Home = () => {
     correct: [],
     unexist: []
   })
+  const [correctLetters, setcorrectLetters] = useState<LetterData[]>([])
 
-  const updateKeyboardLetterStatus = ({ correct, unexist }: { correct: string[], unexist: string[] }) => {
-    setkeyboardLettersStatus({ correct, unexist })
+
+  const updateKeyboardLetterStatus = ({ correct, unexist }: { correct: string[], unexist: string[] }, reset?: boolean) => {
+    if (reset) setkeyboardLettersStatus({ correct: [], unexist: [] })
+    setkeyboardLettersStatus(({ correct: actualCorrect, unexist: actualUnexist }) => ({ 
+      correct: [...new Set([...actualCorrect, ...correct])], 
+      unexist: [...new Set([...actualUnexist, ...unexist])]
+    }))
+  }
+
+  const handleSetCorrectLetters = (letters: LetterData[]) => {
+    if (correctLetters.length !== letters.length) return setcorrectLetters(letters)
+
+    setcorrectLetters(correctLetters.map(({ letter, status }: LetterData, index: number): LetterData => {
+      if (status === 'correct') return { letter, status, index }
+      if (letters[index].status === 'correct') return letters[index]
+      return { letter: '_', status: 'normal', index }
+    }))
   }
 
   const letterScreenRef = useRef<LetterScreenRefFunction>();
@@ -25,9 +43,14 @@ export const Home = () => {
           <h1>Word-Game</h1>
         </div>
         <div className="body-container full">
-          <LetterScreen reference={letterScreenRef} updateKeyboardLetterStatus={updateKeyboardLetterStatus} />
+          <LetterScreen 
+            reference={letterScreenRef}
+            updateKeyboardLetterStatus={updateKeyboardLetterStatus}
+            setcorrectLetters={handleSetCorrectLetters}
+          />
           <div className="panel-container">
             <div className="actions-container full">
+              <div></div>
               <button
                 className="get-word-btn"
                 onClick={(e) => {
@@ -37,6 +60,9 @@ export const Home = () => {
               >
                 Obtener otra palabra
               </button>
+            </div>
+            <div className="correct-letter">
+              <CorrectWords letters={correctLetters} />
             </div>
             <div className="full center">
               <Keyboard keyboardLettersStatus={keyboardLettersStatus} />
