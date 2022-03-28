@@ -5,6 +5,7 @@ import { KeyboardLetterStatusProps, LetterScreenRefFunction } from './home-defin
 import { Keyboard, LetterScreen } from "./page-components"
 import { CorrectWords } from "components/Correct-words/Correct-words"
 import { LetterData } from "@types"
+import { MdRefresh } from 'react-icons/md'
 
 
 
@@ -58,7 +59,10 @@ export const Home = () => {
                   (e.target as any).blur()
                 }}
               >
-                Obtener otra palabra
+                <div>
+                  <MdRefresh size={24} />
+                </div>
+                <span>Obtener otra palabra</span>
               </button>
             </div>
             <div className="correct-letter">

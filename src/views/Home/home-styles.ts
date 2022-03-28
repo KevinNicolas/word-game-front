@@ -36,12 +36,22 @@ export const HomeStyles = styled.div`
       }
 
       .get-word-btn {
-        background: var(--primary);
-        color: var(--contrast-color);
-        padding: .5rem 1.5rem;
-        border-radius: 5px;
-        font-weight: 600;
+        display: flex;
+        flex-flow: row;
+        gap: .2rem;
+        align-items: center;
+        background: transparent;
         cursor: pointer;
+
+        div {
+          background: var(--primary);
+          color: var(--contrast-color);
+          padding: .2rem .3rem;
+          border-radius: 999px;
+          font-weight: 600;
+        }
+
+        span { color: var(--primary); font-weight: 600; }
       }
 
       .correct-letter {
