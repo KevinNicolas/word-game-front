@@ -1,12 +1,12 @@
 import styled from "styled-components";
-import { LetterStatus, NewLetterStatus } from "@types"
+import { LetterStatus } from "@types"
 
 interface StyleProps {
   wordIsComplete: boolean
-  status: NewLetterStatus
+  status: LetterStatus
 }
 
-const statusToColors: Record<NewLetterStatus, string> = {
+const statusToColors: Record<LetterStatus, string> = {
   normal: '#ffa500',
   correct: 'linear-gradient(145deg, #1fb143, #1a9539)',
   existInWord: 'linear-gradient(145deg, #ffcd00, #ddad00)',

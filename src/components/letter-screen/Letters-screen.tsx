@@ -1,6 +1,6 @@
 import { MutableRefObject, useEffect, useImperativeHandle, useState } from "react"
 
-import { NewLetterData } from "@types"
+import { LetterData } from "@types"
 import { WaterfallLoading, WordLetterCard } from "@components"
 import { useBackend, useKeyListener, useWordDataContext } from "@hooks"
 
@@ -33,7 +33,7 @@ export const LetterScreen = ({ reference }: Props) => {
   }
   const processScreenLetters = () => {
     if (typedWord.value.length <= wordData.guessWord.length && wordData.guessWord.length !== 0) {
-      const lettersToDisplay: NewLetterData[] = typedWord.value.split('').map<NewLetterData>((letter) => ({ letter, status: 'normal' }))
+      const lettersToDisplay: LetterData[] = typedWord.value.split('').map<LetterData>((letter) => ({ letter, status: 'normal' }))
       
       for (let i = lettersToDisplay.length; i < wordData.guessWord.length; i++) lettersToDisplay.push({ letter: ' ', status: 'normal' })
       setscreenLetters(lettersToDisplay)
@@ -45,7 +45,7 @@ export const LetterScreen = ({ reference }: Props) => {
   const handleEnterEvent = () => {
     if (typedWord.value.length === wordData.guessWord.length && !wordData.isAnalyzed) {
       const updatedLetterStatuts = wordData.enteredLetterStatus
-      const newScreenLetter: NewLetterData[] = screenLetters.map<NewLetterData>(({ letter }: NewLetterData, index: number ) => {
+      const newScreenLetter: LetterData[] = screenLetters.map<LetterData>(({ letter }: LetterData, index: number ) => {
         if (!wordData.guessWord.includes(letter)) {  
           updatedLetterStatuts[letter] = 'incorrect'
           return { letter, status: 'incorrect' }
@@ -63,7 +63,7 @@ export const LetterScreen = ({ reference }: Props) => {
       return setwordData({ 
         ...wordData,
         isAnalyzed: true,
-        gameOver: wordData.guessWord.length === newScreenLetter.filter(({ status }: NewLetterData) => status === 'correct').length,
+        gameOver: wordData.guessWord.length === newScreenLetter.filter(({ status }: LetterData) => status === 'correct').length,
         enteredWord: typedWord.value,
         enteredLetterStatus: updatedLetterStatuts
       })
@@ -79,7 +79,7 @@ export const LetterScreen = ({ reference }: Props) => {
 
 
   const { wordData, setwordData } = useWordDataContext()
-  const [screenLetters, setscreenLetters] = useState<NewLetterData[]>([])
+  const [screenLetters, setscreenLetters] = useState<LetterData[]>([])
   const [typedWord, settypedWord] = useKeyListener(handleEnterEvent, handleClearWord)
 
   
@@ -92,7 +92,7 @@ export const LetterScreen = ({ reference }: Props) => {
         {
           wordData.guessWord === ''
             ? <WaterfallLoading />
-            : screenLetters.map(({ letter, status }: NewLetterData, index: number) => 
+            : screenLetters.map(({ letter, status }: LetterData, index: number) => 
               <WordLetterCard
                 key={index}
                 letter={letter}

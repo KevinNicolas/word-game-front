@@ -2,7 +2,7 @@ import { useRef } from "react"
 
 import { HomeStyles } from "./home-styles"
 import { LetterScreenRefFunction } from './home-definitions'
-import { Keyboard, LetterScreen } from "./page-components"
+import { Keyboard, LetterScreen } from "@components"
 import { CorrectWords } from "components/Correct-words/Correct-words"
 import { MdRefresh } from 'react-icons/md'
 import { WordDataProvider } from "@components"

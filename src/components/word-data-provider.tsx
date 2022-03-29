@@ -1,12 +1,12 @@
 import { WordDataContext } from "@context"
-import { NewLetterStatus } from "@types"
+import { LetterStatus } from "@types"
 import { keyboardLetters } from "@utils"
 import { useState } from "react"
 import { WordData } from "types/word-data"
 
 
 export const WordDataProvider = ({ child }: { child: JSX.Element }) => {
-  const enteredLetterStatus: Record<string, NewLetterStatus> = {}
+  const enteredLetterStatus: Record<string, LetterStatus> = {}
   for (const keyboardRow of keyboardLetters)
     for (const letter of keyboardRow)
       enteredLetterStatus[letter] = 'normal'

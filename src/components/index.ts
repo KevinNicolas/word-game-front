@@ -1,4 +1,6 @@
-export * from './Keyboard-key/Keyboard-key'
+export * from './keyboard-key/Keyboard-key'
 export * from './Waterfall-loading/Waterfall-loading'
 export * from './Word-letter-card/Word-letter-card'
 export * from './word-data-provider'
+export * from './keyboard/Keyboard'
+export * from './letter-screen/Letters-screen'
