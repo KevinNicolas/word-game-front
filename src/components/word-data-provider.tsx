@@ -1,13 +1,20 @@
 import { WordDataContext } from "@context"
+import { NewLetterStatus } from "@types"
+import { keyboardLetters } from "@utils"
 import { useState } from "react"
 import { WordData } from "types/word-data"
 
 
 export const WordDataProvider = ({ child }: { child: JSX.Element }) => {
+  const enteredLetterStatus: Record<string, NewLetterStatus> = {}
+  for (const keyboardRow of keyboardLetters)
+    for (const letter of keyboardRow)
+      enteredLetterStatus[letter] = 'normal'
+
   const [wordData, setwordData] = useState<WordData>({
     guessWord: '',
     enteredWord: '',
-    enteredLetterStatus: {},
+    enteredLetterStatus,
     isAnalyzed: false,
     gameOver: false
   })

@@ -1,20 +1,19 @@
-import { KeyboardKey } from "@components"
+import { useEffect } from "react"
 
-import { KeyboardLetterStatusProps } from '../../home-definitions'
+import { KeyboardKey } from "@components"
+import { keyboardLetters } from "@utils"
+import { useWordDataContext } from "@hooks"
+
 import { KeyboardStyles } from "./keyboard-styles"
 
+export const Keyboard = () => {
+  const { wordData } = useWordDataContext()
 
-const keyboardLetters: string[][] = [
-  ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'],
-  ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'],
-  ['z', 'x', 'c', 'v', 'b', 'n', 'm']
-]
+  useEffect(() => {
+    console.info('Update...')
+  }, [wordData.enteredLetterStatus])
+  
 
-interface Props {
-  keyboardLettersStatus: KeyboardLetterStatusProps
-}
-
-export const Keyboard = ({ keyboardLettersStatus }: Props) => {
   return (
     <KeyboardStyles>
       <div className="letters-container full">
@@ -26,8 +25,8 @@ export const Keyboard = ({ keyboardLettersStatus }: Props) => {
                   <KeyboardKey
                     key={letterIndex}
                     letter={letter}
-                    pressed={keyboardLettersStatus.unexist.includes(letter)}
-                    good={keyboardLettersStatus.correct.includes(letter)}
+                    pressed={wordData.enteredLetterStatus[letter] === 'incorrect'}
+                    good={wordData.enteredLetterStatus[letter] === 'correct'}
                   />
                 ))
               }
