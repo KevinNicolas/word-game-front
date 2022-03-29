@@ -6,6 +6,7 @@ import { Keyboard, LetterScreen } from "./page-components"
 import { CorrectWords } from "components/Correct-words/Correct-words"
 import { LetterData } from "@types"
 import { MdRefresh } from 'react-icons/md'
+import { WordDataProvider } from "@components"
 
 
 
@@ -39,41 +40,43 @@ export const Home = () => {
 
   return (
     <HomeStyles>
-      <div className="page-container">
-        <div className="header-container full">
-          <h1>Word-Game</h1>
-        </div>
-        <div className="body-container full">
-          <LetterScreen 
-            reference={letterScreenRef}
-            updateKeyboardLetterStatus={updateKeyboardLetterStatus}
-            setcorrectLetters={handleSetCorrectLetters}
-          />
-          <div className="panel-container">
-            <div className="actions-container full">
-              <div></div>
-              <button
-                className="get-word-btn"
-                onClick={(e) => {
-                  letterScreenRef.current?.refreshWord();
-                  (e.target as any).blur()
-                }}
-              >
-                <div>
-                  <MdRefresh size={24} />
-                </div>
-                <span>Obtener otra palabra</span>
-              </button>
-            </div>
-            <div className="correct-letter">
-              <CorrectWords letters={correctLetters} />
-            </div>
-            <div className="full center">
-              <Keyboard keyboardLettersStatus={keyboardLettersStatus} />
+      <WordDataProvider child={
+        <div className="page-container">
+          <div className="header-container full">
+            <h1>Word-Game</h1>
+          </div>
+          <div className="body-container full">
+            <LetterScreen 
+              reference={letterScreenRef}
+              updateKeyboardLetterStatus={updateKeyboardLetterStatus}
+              setcorrectLetters={handleSetCorrectLetters}
+            />
+            <div className="panel-container">
+              <div className="actions-container full">
+                <div></div>
+                <button
+                  className="get-word-btn"
+                  onClick={(e) => {
+                    letterScreenRef.current?.refreshWord();
+                    (e.target as any).blur()
+                  }}
+                >
+                  <div>
+                    <MdRefresh size={24} />
+                  </div>
+                  <span>Obtener otra palabra</span>
+                </button>
+              </div>
+              <div className="correct-letter">
+                <CorrectWords letters={correctLetters} />
+              </div>
+              <div className="full center">
+                <Keyboard keyboardLettersStatus={keyboardLettersStatus} />
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      }/>
     </HomeStyles>
   )
 }

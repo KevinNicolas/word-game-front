@@ -1,16 +1,16 @@
 import styled from "styled-components";
-import { LetterStatus } from "@types"
+import { LetterStatus, NewLetterStatus } from "@types"
 
 interface StyleProps {
   wordIsComplete: boolean
-  status: LetterStatus
+  status: NewLetterStatus
 }
 
-const statusToColors: Record<LetterStatus, string> = {
+const statusToColors: Record<NewLetterStatus, string> = {
   normal: '#ffa500',
   correct: 'linear-gradient(145deg, #1fb143, #1a9539)',
-  incorrect: 'linear-gradient(145deg, #ffcd00, #ddad00)',
-  unexist: 'linear-gradient(145deg, #b6b6b6, #999999)'
+  existInWord: 'linear-gradient(145deg, #ffcd00, #ddad00)',
+  incorrect: 'linear-gradient(145deg, #b6b6b6, #999999)'
 }
 
 export const WordLetterCardStyles = styled.div<StyleProps>`

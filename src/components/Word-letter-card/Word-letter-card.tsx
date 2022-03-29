@@ -1,10 +1,10 @@
-import { LetterStatus } from "@types"
+import { LetterStatus, NewLetterStatus } from "@types"
 import { memo } from "react"
 import { WordLetterCardStyles } from "./word-letter-card-styles"
 
 interface Props {
   letter: string
-  status: LetterStatus
+  status: NewLetterStatus
   wordIsComplete: boolean
   toUpperCase?: boolean
 }

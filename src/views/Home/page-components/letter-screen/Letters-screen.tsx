@@ -1,8 +1,8 @@
 import { MutableRefObject, useEffect, useImperativeHandle, useState } from "react"
 
 import { WaterfallLoading, WordLetterCard } from "@components"
-import { useBackend, useKeyListener } from "@hooks"
-import { LetterData } from "@types"
+import { useBackend, useKeyListener, useWordDataContext } from "@hooks"
+import { LetterData, NewLetterData, NewLetterStatus } from "@types"
 import { parseWord } from "@utils"
 
 import { LetterScreenStyles } from "./letters-screen-styles"
@@ -20,85 +20,67 @@ export const LetterScreen = ({ reference, updateKeyboardLetterStatus, setcorrect
     refreshWord: () => getWord()
   }))
 
-  const handleEnterEvent = () => {
-    if (wordStatus.alreadyAnalyzed) return
-    const { lettersData: parsedWords, wordIsComplete: isComplete } = parseWord({ wordToGuess: word, enteredWord: typedWord.value })
-    const correct: string[] = []
-    const unexist: string[] = []
-    for (const { letter, status } of parsedWords) {
-      switch (status) {
-        case 'correct': correct.push(letter); break;
-        case 'unexist': unexist.push(letter); break;
-      }
-    }
-
-    updateKeyboardLetterStatus({ correct, unexist })
-    setdisplayLetters(parsedWords)
-    setwordStatus({ isComplete, alreadyAnalyzed: true })
-    setcorrectLetters(parsedWords)
-  }
-
-  const processDisplayLetters = ({ reset = false }: { reset?: boolean }) => {
-    if (reset) {
-      setwordStatus({ isComplete: false, alreadyAnalyzed: false })
-      settypedWord({ value: '', lenght: word.length })
-      updateKeyboardLetterStatus({ correct: [], unexist: [] }, true)
-      setcorrectLetters(word.split('').map(({}, index: number) => ({ letter: '_', index, status: 'normal' })))
-    }
-    
-    if (typedWord.value.length <= word.length) {
-      let letters = typedWord.value
-      for (let i = 0; i < (word.length - typedWord.value.length); i++) letters += ' '
-      const lettersToDisplay: LetterData[] = letters.split('').map((letter: string, index: number): LetterData => ({
-        index,
-        letter,
-        status: 'normal'
-      }))
-      setdisplayLetters(lettersToDisplay)
-    }
-  }
-
-  const clearTypedWord = () => { 
-    if (wordStatus.isComplete) return getWord()
-    if (wordStatus.alreadyAnalyzed) {
-      setwordStatus({ ...wordStatus, alreadyAnalyzed: false })
-      return settypedWord({ ...typedWord, value: '' })
-    }
-    settypedWord(({ value }) => ({ ...typedWord, value: value.substring(0, value.length - 1)}))
-  }
 
   const getWord = () => {
-    setword('')
+    setwordData({ guessWord: '', enteredWord: '', enteredLetterStatus: {}, isAnalyzed: false, gameOver: false })
     useBackend.get$<{ word: string }>({ endpoint: '/word' }).subscribe({
-      next: ({ word }) => { setword(word.split(' ')[0].toLowerCase()); settypedWord({ ...typedWord, lenght: word.length }); console.info(`Word: ${word}`) },
+      next: ({ word }) => {
+        const parsedWord = word.split(' ')[0].toLowerCase()
+        settypedWord({ ...typedWord, lenght: parsedWord.length });
+        setwordData((newWordData) => ({ ...newWordData, guessWord: parsedWord }))
+      },
       error: ({ error }) => { console.error(error) }
     })
   }
+  const processScreenLetters = () => {
+    if (wordData.enteredWord.length <= wordData.guessWord.length && wordData.guessWord.length !== 0) {
+      const lettersToDisplay: NewLetterData[] = typedWord.value.split('').map<NewLetterData>((letter) => ({ letter, status: 'normal' }))
+      for (let i = lettersToDisplay.length; i < wordData.guessWord.length; i++) lettersToDisplay.push({ letter: '_', status: 'normal' })
+      setscreenLetters(lettersToDisplay)
+      setwordData({ ...wordData, enteredWord: typedWord.value, isAnalyzed: false, gameOver: false })
+    }
+  }
+  const handleEnterEvent = () => {
+    if (wordData.enteredWord.length === wordData.guessWord.length && !wordData.isAnalyzed) {
+      const newScreenLetter: NewLetterData[] = screenLetters.map<NewLetterData>(({ letter }: NewLetterData, index: number ) => {
+        if (!wordData.guessWord.includes(letter)) return { letter, status: 'incorrect' }
+        if (wordData.guessWord[index] === letter) return { letter, status: 'correct' }
+        return { letter, status: 'existInWord' }
+      })
 
-  const [word, setword] = useState<string>('')
-  const [displayLetters, setdisplayLetters] = useState<LetterData[]>([])
-  const [wordStatus, setwordStatus] = useState<{ isComplete: boolean, alreadyAnalyzed: boolean }>({ isComplete: false, alreadyAnalyzed: false })
-  const [typedWord, settypedWord] = useKeyListener(handleEnterEvent, clearTypedWord)
+      setscreenLetters(newScreenLetter)
+      if (wordData.guessWord.length === newScreenLetter.filter(({ status }: NewLetterData) => status === 'correct').length)
+        return setwordData({ ...wordData, isAnalyzed: true, gameOver: true })
+      return setwordData({ ...wordData, isAnalyzed: true, gameOver: false })
+    }
+  }
+  const handleClearWord = () => {
+    if (wordData.isAnalyzed) return settypedWord({ ...typedWord, value: '' })
+    return settypedWord({ ...typedWord, value: typedWord.value.substring(0, typedWord.value.length - 1) })
+  }
 
-  useEffect(() => {
-    getWord()
-  }, [])
 
-  useEffect(() => { processDisplayLetters({ reset: false }) }, [typedWord])
-  useEffect(() => { processDisplayLetters({ reset: true }) }, [word])
+  const { wordData, setwordData } = useWordDataContext()
+  const [screenLetters, setscreenLetters] = useState<NewLetterData[]>([])
+  const [typedWord, settypedWord] = useKeyListener(handleEnterEvent, handleClearWord)
+
+  
+  useEffect(() => { getWord() }, [])
+  useEffect(() => { processScreenLetters() }, [typedWord])
+  useEffect(() => { processScreenLetters(); console.info(`Word: ${wordData.guessWord}`) }, [wordData.guessWord])
 
   return (
-    <LetterScreenStyles wordIsComplete={wordStatus.isComplete}>
+    <LetterScreenStyles wordIsComplete={wordData.gameOver}>
       <div className="word-container full center">
         {
-          word === ''
+          wordData.guessWord === ''
             ? <WaterfallLoading />
-            : displayLetters.map(({ letter, status }: LetterData, index: number) => 
+            : screenLetters.map(({ letter, status }: NewLetterData, index: number) => 
               <WordLetterCard
                 key={index}
                 letter={letter}
                 status={status}
-                wordIsComplete={wordStatus.isComplete}
+                wordIsComplete={wordData.gameOver}
               />)
         }
       </div>

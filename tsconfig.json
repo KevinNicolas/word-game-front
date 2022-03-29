@@ -23,7 +23,8 @@
       "@views": ["views/index"],
       "@styles": ["assets/styles/index"],
       "@utils": ["utils/index"],
-      "@types": ["types/index.d.ts"]
+      "@types": ["types/index.d.ts"],
+      "@context": ["contexts/index"]
     }
   },
   "include": ["src"],

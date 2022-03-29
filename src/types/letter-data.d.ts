@@ -5,3 +5,10 @@ export interface LetterData {
   letter: string
   status: LetterStatus
 }
+
+export type NewLetterStatus = 'correct' | 'incorrect' | 'existInWord' | 'normal'
+
+export interface NewLetterData {
+  letter: string
+  status: NewLetterStatus
+}
