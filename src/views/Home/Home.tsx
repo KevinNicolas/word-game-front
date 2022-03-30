@@ -32,7 +32,7 @@ export const Home = () => {
                   }}
                 >
                   <div>
-                    <MdRefresh size={24} />
+                    <MdRefresh size={20} />
                   </div>
                   <span>Obtener otra palabra</span>
                 </button>

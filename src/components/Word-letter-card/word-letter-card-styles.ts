@@ -23,6 +23,7 @@ export const WordLetterCardStyles = styled.div<StyleProps>`
     box-shadow:  
         10px 10px 28px ${({ wordIsComplete }) => wordIsComplete ? '#1a9639' : '#e09100'},
         -10px -10px 28px ${({ wordIsComplete }) => wordIsComplete ? '#1a9639' : '#ffb900'};
+    animation: grow 500ms linear 1;
     transition: all 300ms linear;
 
     span {
@@ -30,6 +31,17 @@ export const WordLetterCardStyles = styled.div<StyleProps>`
       font-weight: 600;
       font-size: 4rem;
       transition: color 300ms linear;
+    }
+  }
+
+  @keyframes grow {
+    from {
+      box-shadow: 0 0 0 transparent, 0 0 0 transparent;
+    }
+    to {
+      box-shadow:  
+        10px 10px 28px ${({ wordIsComplete }) => wordIsComplete ? '#1a9639' : '#e09100'},
+        -10px -10px 28px ${({ wordIsComplete }) => wordIsComplete ? '#1a9639' : '#ffb900'};
     }
   }
 `

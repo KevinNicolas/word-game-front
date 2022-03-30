@@ -12,7 +12,7 @@ interface Props {
 export const WordLetterCard = memo(({ letter, status, wordIsComplete, toUpperCase = true }: Props) => {
   return (
     <WordLetterCardStyles status={status} wordIsComplete={wordIsComplete}>
-      <div className={`word-letter-card-container center`}>
+      <div className={`word-letter-card-container center grow-animation`}>
         <span>{ toUpperCase ? letter.toUpperCase() : letter }</span>
       </div>
     </WordLetterCardStyles>
