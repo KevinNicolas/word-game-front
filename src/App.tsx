@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Home } from '@views';
+import { AppRouter } from './App-router';
 
 function App() {
   const [theme, setTheme] = useState<string>('')
@@ -8,7 +8,7 @@ function App() {
     document.addEventListener('theme-changed', (event: any) => {  setTheme(event.detail.theme) })
   }, [])
 
-  return ( <Home /> )
+  return ( <AppRouter /> )
 }
 
 export default App

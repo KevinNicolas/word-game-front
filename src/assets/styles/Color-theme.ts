@@ -6,9 +6,11 @@ export const DarkTheme = createGlobalStyle`
     --primary-light: #fff;
     --primary-dark: #fff;
 
-    --secondary: #fff;
+    --secondary: #f90;
     --secondary-light: #fff;
     --primary-light: #fff;
+
+    --background-color: #333;
 
     --inverted-text-color: #333;
     --contrast-color: #fafafa;
@@ -25,6 +27,8 @@ export const LightTheme = createGlobalStyle`
     --secondary: #fff;
     --secondary-light: #fff;
     --primary-light: #fff;
+
+    --background-color: #fafafa;
 
     --inverted-text-color: #fafafa;
     --contrast-color: #333;

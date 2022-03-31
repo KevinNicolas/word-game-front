@@ -2,7 +2,7 @@ import React, { createContext } from "react";
 import { WordData } from "types/word-data";
 
 interface ContextProps {
-  wordData: WordData, 
+  wordData: WordData
   setwordData: React.Dispatch<React.SetStateAction<WordData>>
 }
 

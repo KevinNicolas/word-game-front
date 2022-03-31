@@ -37,4 +37,6 @@ export const GlobalStyle = createGlobalStyle`
     justify-content: center;
     align-items: center;
   }
+
+  button { cursor: pointer; }
 `
