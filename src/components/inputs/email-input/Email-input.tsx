@@ -1,21 +1,19 @@
-import { SwapLoading } from "components/swap-loading/Swap-loading"
 import { useAuthFormContext } from "hooks/use-auth-form-context"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { MdEmail, MdMarkEmailRead, MdOutlineClose } from "react-icons/md"
 import { EmailInputStyles } from "./email-input-styles"
 
 interface Props {
-  isLogin: boolean
+  setEmailCallback: (email: string) => void
 }
 
-export const EmailInput = ({ isLogin }: Props) => {
+export const EmailInput = ({ setEmailCallback }: Props) => {
   const [emailInput, setemailInput] = useState<string>('')
   const [error, seterror] = useState<{ message: string, isError: boolean }>({
     isError: false,
     message: ''
   })
-  const [status, setstatus] = useState<'normal' | 'loading' | 'checked' | 'error'>('normal')
-
+  const [status, setstatus] = useState<'normal' | 'checked' | 'error'>('normal')
   const { authData, setauthData } = useAuthFormContext()
 
   const handleBlurEvent = () => {
@@ -32,10 +30,12 @@ export const EmailInput = ({ isLogin }: Props) => {
       
     } else if (emailInput === '') {
       seterror({ ...error, isError: false })
-      setstatus('normal')
       setauthData({ ...authData, email: '' })
+      setstatus('normal')
     }
   }
+
+  useEffect(() => { setemailInput(authData.email) }, [authData.email])
 
   return (
     <EmailInputStyles showErrorLabel={error.isError}>
@@ -45,12 +45,12 @@ export const EmailInput = ({ isLogin }: Props) => {
           <input 
             type="email"
             placeholder="example@email.com"
+            defaultValue={authData.email}
             onInput={(event) => { setemailInput((event.target as any).value) }}
             onBlur={() => { handleBlurEvent() }}
           />
           {
             status === 'normal' ? <MdEmail /> :
-            status === 'loading' ? <SwapLoading sizePx={20} /> :
             status === 'error' ? <MdOutlineClose className="alert" /> :
             status === 'checked' ? <MdMarkEmailRead className="success" /> : <></>
           }

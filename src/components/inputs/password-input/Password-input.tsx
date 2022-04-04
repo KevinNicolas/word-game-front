@@ -1,15 +1,22 @@
 import { PasswordInputStyles } from './password-input-styles'
 import { IoMdEye, IoMdEyeOff } from 'react-icons/io'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useAuthFormContext } from 'hooks/use-auth-form-context'
 
-export const PasswordInput = () => {
+interface Props {
+  setPasswordCallback: (password: string) => void
+}
+
+export const PasswordInput = ({ setPasswordCallback }: Props) => {
 
   const [showPassword, setshowPassword] = useState<boolean>(false)
   const [passwordInput, setpasswordInput] = useState<string>('')
   const { authData, setauthData } = useAuthFormContext()
+  
 
   const handleBlurEvent = () => { setauthData({ ...authData, password: passwordInput }) }
+
+  useEffect(() => { setpasswordInput(authData.password) }, [authData.password])
 
   return (
     <PasswordInputStyles>
@@ -18,10 +25,12 @@ export const PasswordInput = () => {
         <div className="input-container">
           <input 
             type={showPassword ? 'text' : 'password'}
+            autoComplete="on"
+            defaultValue={authData.password}
             onInput={(event) => { setpasswordInput((event.target as any).value) }}
             onBlur={() => { handleBlurEvent() }}
           />
-          <button onClick={() => { setshowPassword(!showPassword) }}>
+          <button type='button' onClick={() => { setshowPassword(!showPassword) }}>
             { showPassword ? <IoMdEye size={24} /> : <IoMdEyeOff size={24} /> }
           </button>
         </div>

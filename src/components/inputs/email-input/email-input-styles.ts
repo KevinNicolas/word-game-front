@@ -33,6 +33,9 @@ export const EmailInputStyles = styled.div<StylesProp>`
   }
 
   .error-label {
+    color: #ff3333 !important;
+    font-size: .8rem;
+    font-weight: 500;
     transition: opacity 300ms linear;
     opacity: ${({ showErrorLabel }) => showErrorLabel ? 1 : 0};
   }

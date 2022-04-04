@@ -10,7 +10,7 @@ interface ContextProps {
 const authDataDefaultValues: AuthData = {
   email: '',
   password: '',
-  isLogin: false
+  username: ''
 }
 
 export const AuthFormContext = createContext<ContextProps>({ authData: authDataDefaultValues, setauthData: () => {} })

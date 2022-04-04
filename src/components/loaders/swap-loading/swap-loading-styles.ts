@@ -5,6 +5,11 @@ interface StylesProps {
 }
 
 export const SwapLoadingStyles = styled.div<StylesProps>`
+  .swap {
+    --first-ring-color: #09f;
+    --second-ring-color: #f90;
+  }
+
   @-webkit-keyframes swap {
     0%, 100% {
       -webkit-transform: scale(0);
@@ -38,11 +43,11 @@ export const SwapLoadingStyles = styled.div<StylesProps>`
   .swap:after {
     animation: swap 1.5s -0.75s infinite;
     -webkit-animation: swap 1.5s -0.75s infinite;
-    background-color: var(--primary); }
+    background-color: var(--first-ring-color); }
 
   .swap:before {
     animation: swap 1.5s infinite;
     -webkit-animation: swap 1.5s infinite;
-    background-color: var(--secondary); 
+    background-color: var(--second-ring-color); 
   }
 `
