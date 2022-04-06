@@ -1,28 +1,20 @@
-import { useEffect, useState } from "react"
+import { useDebounce } from 'hooks/use-debounce';
+import { useEffect, useState } from 'react';
 
 interface Props {
-  epic: string
-  defaultValue: string
-  setTextCallback: (text: string) => void
+  epic: string;
+  setTextCallback: (text: string) => void;
 }
 
-export const TextInput = ({ epic, defaultValue, setTextCallback }: Props) => {
-  const [textInput, settextInput] = useState<string>('')
-  
-  useEffect(() => { settextInput(defaultValue) }, []) 
+export const TextInput = ({ epic, setTextCallback }: Props) => {
+  const setTextCallbackHandler = (event: any) => setTextCallback(event.target.value);
+
+  const debouncedSetTextCallbackHandler = useDebounce(setTextCallbackHandler, 600);
 
   return (
     <div className="username-input-container">
-      <span>Username</span>
-      <input
-        type="text"
-        placeholder="Artur..."
-        defaultValue={textInput}
-        onInput={(event) => { settextInput((event.target as any).value) }}
-        onBlur={() => { 
-          setTextCallback(textInput) 
-        }}
-      />
-                  </div>
-  )
-}
+      <span>{epic}</span>
+      <input type="text" placeholder="Artur..." onInput={debouncedSetTextCallbackHandler} />
+    </div>
+  );
+};

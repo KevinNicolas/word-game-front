@@ -14,13 +14,15 @@
     "react-icons": "^4.3.1",
     "react-router-dom": "^6.2.2",
     "rxjs": "^7.5.5",
-    "styled-components": "^5.3.3"
+    "styled-components": "^5.3.3",
+    "throttle-debounce": "^3.0.1"
   },
   "devDependencies": {
     "@types/node": "^17.0.22",
     "@types/react": "^17.0.33",
     "@types/react-dom": "^17.0.10",
     "@types/styled-components": "^5.1.24",
+    "@types/throttle-debounce": "^2.1.0",
     "@vitejs/plugin-react": "^1.0.7",
     "typescript": "^4.5.4",
     "vite": "^2.8.0",

@@ -10,7 +10,6 @@ export const Keyboard = () => {
   const { wordData } = useWordDataContext()
 
   useEffect(() => {
-    console.info('Update...')
   }, [wordData.enteredLetterStatus])
   
 

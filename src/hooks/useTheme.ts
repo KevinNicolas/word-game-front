@@ -19,7 +19,6 @@ export const useTheme = (): [string, () => void] => {
 
   useEffect(() => {
     localStorage.setItem('theme', theme);
-    console.info('New Theme', theme)
   }, [theme])
 
   useEffect(() => { document.dispatchEvent(new CustomEvent<{ theme: string }>('theme-changed', { detail: { theme } })) })

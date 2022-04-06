@@ -1,9 +1,16 @@
-import { AuthData } from "@types";
+import { LoginData, SignupData } from "@types";
 
-export const isValidUser = ({ authData: { email, password, username }, isLogin }: { authData: AuthData, isLogin: boolean }): boolean => {
-  console.info('Validate user...', { email, password, username, isLogin })
-  console.info('Return:', !(email === '' || password === '' || (!isLogin && username === '')))
-  if (email === '' || password === '' || (!isLogin && username === '')) return false
+const instanceOfSignupData = (object: any): object is SignupData => {
+  return "username" in object;
+};
 
-  return true
-}
+export const isValidUser = (context: LoginData | SignupData): boolean => {
+  if (
+    context.email === "" ||
+    context.password === "" ||
+    (instanceOfSignupData(context) && context.username === "")
+  )
+    return false;
+
+  return true;
+};
