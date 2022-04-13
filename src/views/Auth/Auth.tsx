@@ -2,11 +2,17 @@ import { EmailInput, PasswordInput, TraditionalLoading } from '@components';
 import { LoginData, SignupData } from '@types';
 import { TextInput } from 'components/inputs/text-input/Text-input';
 import { useDebounce } from 'hooks/use-debounce';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { isValidUser } from 'utils/is-valid-user';
 import { AuthStyles } from './auth-styles';
+import { Eye } from './page-components/Eye';
+import { LoginForm } from './page-components/Login-form';
+import { SignupForm } from './page-components/Signup-form';
+import { useCloseEye } from './page-components/use-close-eye';
 
 export const Auth = () => {
+  const [isLogin, setisLogin] = useState(false);
+
   const [validations, setvalidations] = useState<{
     isLogin: boolean;
     isValidUser: boolean;
@@ -37,7 +43,7 @@ export const Auth = () => {
   useEffect(() => analyzeAuthFormData(signupForm), [signupForm]);
 
   return (
-    <AuthStyles isLogin={validations.isLogin} isValidUser={validations.isValidUser}>
+    <AuthStyles isLogin={isLogin} isValidUser={validations.isValidUser}>
       <div className="page-container">
         <div className="area">
           <ul className="circles">
@@ -58,43 +64,8 @@ export const Auth = () => {
             <h1>Word-Game</h1>
           </div>
           <div className="auth-container">
-            <div className="signup-container">
-              <div
-                className="signup-header"
-                onClick={() => {
-                  if (validations.isLogin) setvalidations({ ...validations, isLogin: false });
-                }}
-              >
-                <span>Registrarse</span>
-              </div>
-              <div className="signup-body">
-                <form>
-                  <TextInput epic={'Username'} setTextCallback={(username: string) => setsignupForm({ ...signupForm, username })} />
-                  <EmailInput setInputContentCallback={(email: string) => setsignupForm({ ...signupForm, email })} />
-                  <PasswordInput setInputContentCallback={(password: string) => setsignupForm({ ...signupForm, password })} />
-                </form>
-                <button className="signup-button center" onClick={() => {}}>
-                  {validations.isLoading ? <TraditionalLoading size={30} color="orange" /> : <span>Registrarse</span>}
-                </button>
-              </div>
-            </div>
-            <div className="login-container">
-              <div
-                className="login-header"
-                onClick={() => {
-                  if (!validations.isLogin && !validations.isLoading) setvalidations({ ...validations, isLogin: true });
-                }}
-              >
-                <span>Ingresar</span>
-              </div>
-              <div className="login-body">
-                <form action="">
-                  <EmailInput setInputContentCallback={(email: string) => setloginForm({ ...loginForm, email })} />
-                  <PasswordInput setInputContentCallback={(password: string) => setloginForm({ ...loginForm, password })} />
-                </form>
-                <button className="login-button">{validations.isLoading ? <TraditionalLoading size={30} color="orange" /> : <span>Ingresar</span>}</button>
-              </div>
-            </div>
+            <SignupForm setIsLogin={setisLogin} />
+            <LoginForm setIsLogin={setisLogin} isLogin={isLogin} />
           </div>
         </div>
       </div>

@@ -1,8 +1,8 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const PasswordInputStyles = styled.div`
   input {
-    padding: .5rem 0;
+    padding: 0.5rem 0;
     width: 100%;
     color: #333;
   }
@@ -10,11 +10,11 @@ export const PasswordInputStyles = styled.div`
   button {
     background: transparent;
   }
-  
+
   .password-input-container {
     display: flex;
     flex-flow: column;
-    gap: .2rem;
+    gap: 0.2rem;
   }
 
   .input-container {
@@ -24,8 +24,14 @@ export const PasswordInputStyles = styled.div`
     overflow: hidden;
     align-items: center;
     justify-content: space-between;
-    gap: .2rem;
-    padding: 0 .7rem;
+    gap: 0.2rem;
+    padding: 0 0.7rem;
     border-radius: 5px;
+    border-bottom: 2px solid transparent;
+    transition: border-color 300ms linear;
   }
-`
+
+  .input-container:focus-within {
+    border-color: var(--primary);
+  }
+`;

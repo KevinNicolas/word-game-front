@@ -1,13 +1,7 @@
-import { css } from "styled-components";
+import { css } from 'styled-components';
 
 export const BgAnimation = css`
-  background-image: linear-gradient(
-    -45deg,
-    rgba(59, 173, 227, 1) 0%,
-    rgba(87, 111, 230, 1) 25%,
-    rgba(152, 68, 183, 1) 51%,
-    rgba(255, 53, 127, 1) 100%
-  );
+  background-image: linear-gradient(-45deg, rgba(59, 173, 227, 1) 0%, rgba(87, 111, 230, 1) 25%, rgba(152, 68, 183, 1) 51%, rgba(255, 53, 127, 1) 100%);
 
   .context {
     width: 100%;
@@ -118,13 +112,13 @@ export const BgAnimation = css`
   }
 
   @keyframes animate {
-    0% {
+    from {
       transform: translateY(0) rotate(0deg);
       opacity: 1;
       border-radius: 0;
     }
 
-    100% {
+    to {
       transform: translateY(-1000px) rotate(720deg);
       opacity: 0;
       border-radius: 50%;

@@ -3,8 +3,11 @@ import { useState } from 'react';
 import { MdEmail, MdMarkEmailRead, MdOutlineClose } from 'react-icons/md';
 import { EmailInputStyles } from './email-input-styles';
 
-export const EmailInput = ({ setInputContentCallback }: { setInputContentCallback: (content: string) => void }) => {
-  const [emailInput, setemailInput] = useState<string>('');
+interface Props {
+  setInputContentCallback: (content: string) => void;
+}
+
+export const EmailInput = ({ setInputContentCallback }: Props) => {
   const [error, seterror] = useState<{ message: string; isError: boolean }>({
     isError: false,
     message: '',
