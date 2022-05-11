@@ -16,8 +16,8 @@ export const CorrectWords = () => {
       const newLetterToDisplay: LetterData[] = []
       enteredWord.split('').forEach((letter: string, index: number) => {
         if (lettersToDisplay[index].status === 'correct') return newLetterToDisplay.push(lettersToDisplay[index])
-        if (letter === guessWord[index]) return newLetterToDisplay.push({ letter, index, status: 'correct' })
-        return newLetterToDisplay.push({ letter: '_', index, status: 'normal' })
+        if (letter === guessWord[index]) return newLetterToDisplay.push({ letter, status: 'correct' })
+        return newLetterToDisplay.push({ letter: '_', status: 'normal' })
       })
       setlettersToDisplay(newLetterToDisplay)
     }
